@@ -82,7 +82,9 @@ function addRemoveCart() {
 
 /*<----- Filters and search ----->*/
 function filterAndSearch() {
-    const discountCheckbox = document.querySelector('#discount-checkbox');
+    const discountCheckbox = document.querySelector('#discount-checkbox'),
+          min = document.querySelector('#min'),
+          max = document.querySelector('#max');
 
     /*<----- Discount filter ----->*/
     discountCheckbox.addEventListener('click', () => {
@@ -96,6 +98,23 @@ function filterAndSearch() {
             }
         });
     });
+
+    /*<----- Price filter ----->*/
+    function priceFilter() {
+        cards.forEach((card) => {
+            const cardPrice = card.querySelector('.card-price'),
+                  price = parseFloat(cardPrice.textContent);
+
+            if ((min.value && price < min.value) || (max.value && price > max.value)) {
+                card.parentNode.style.display = 'none';
+            } else {
+                card.parentNode.style.display = '';
+            }
+        })
+    }
+
+    min.addEventListener('change', priceFilter);
+    max.addEventListener('change', priceFilter);
 }
 
 toggleCheckbox();
