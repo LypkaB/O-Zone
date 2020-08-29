@@ -80,43 +80,13 @@ function addRemoveCart() {
     }
 }
 
-/*<----- Filters and search ----->*/
-function filterAndSearch() {
-    const discountCheckbox = document.querySelector('#discount-checkbox'),
+/*<----- Search and filters  ----->*/
+function searchAndFilters() {
+    const search = document.querySelector('.search-wrapper_input'),
+          searchBtn = document.querySelector('.search-btn'),
           min = document.querySelector('#min'),
           max = document.querySelector('#max'),
-          search = document.querySelector('.search-wrapper_input'),
-          searchBtn = document.querySelector('.search-btn');
-
-    /*<----- Discount filter ----->*/
-    discountCheckbox.addEventListener('click', () => {
-        cards.forEach((card) => {
-            if (discountCheckbox.checked) {
-                if (!card.querySelector('.card-sale')) {
-                    card.parentNode.style.display = 'none';
-                }
-            } else {
-                card.parentNode.style.display = '';
-            }
-        });
-    });
-
-    /*<----- Price filter ----->*/
-    function priceFilter() {
-        cards.forEach((card) => {
-            const cardPrice = card.querySelector('.card-price'),
-                  price = parseFloat(cardPrice.textContent);
-
-            if ((min.value && price < min.value) || (max.value && price > max.value)) {
-                card.parentNode.style.display = 'none';
-            } else {
-                card.parentNode.style.display = '';
-            }
-        });
-    }
-
-    min.addEventListener('change', priceFilter);
-    max.addEventListener('change', priceFilter);
+          discountCheckbox = document.querySelector('#discount-checkbox');
 
     /*<----- Search ----->*/
     function searchAction() {
@@ -140,9 +110,39 @@ function filterAndSearch() {
     });
 
     searchBtn.addEventListener('click', searchAction);
+
+    /*<----- Price filter ----->*/
+    function priceFilter() {
+        cards.forEach((card) => {
+            const cardPrice = card.querySelector('.card-price'),
+                  price = parseFloat(cardPrice.textContent);
+
+            if ((min.value && price < min.value) || (max.value && price > max.value)) {
+                card.parentNode.style.display = 'none';
+            } else {
+                card.parentNode.style.display = '';
+            }
+        });
+    }
+
+    min.addEventListener('change', priceFilter);
+    max.addEventListener('change', priceFilter);
+
+    /*<----- Discount filter ----->*/
+    discountCheckbox.addEventListener('click', () => {
+        cards.forEach((card) => {
+            if (discountCheckbox.checked) {
+                if (!card.querySelector('.card-sale')) {
+                    card.parentNode.style.display = 'none';
+                }
+            } else {
+                card.parentNode.style.display = '';
+            }
+        });
+    });
 }
 
 toggleCheckbox();
 toggleCart();
 addRemoveCart();
-filterAndSearch();
+searchAndFilters();
