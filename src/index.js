@@ -84,7 +84,9 @@ function addRemoveCart() {
 function filterAndSearch() {
     const discountCheckbox = document.querySelector('#discount-checkbox'),
           min = document.querySelector('#min'),
-          max = document.querySelector('#max');
+          max = document.querySelector('#max'),
+          search = document.querySelector('.search-wrapper_input'),
+          searchBtn = document.querySelector('.search-btn');
 
     /*<----- Discount filter ----->*/
     discountCheckbox.addEventListener('click', () => {
@@ -110,11 +112,34 @@ function filterAndSearch() {
             } else {
                 card.parentNode.style.display = '';
             }
-        })
+        });
     }
 
     min.addEventListener('change', priceFilter);
     max.addEventListener('change', priceFilter);
+
+    /*<----- Search ----->*/
+    function searchAction() {
+        const searchText = new RegExp(search.value.trim(), 'i');
+
+        cards.forEach((card) => {
+            const title = card.querySelector('.card-title');
+
+            if (!searchText.test(title.textContent)) {
+                card.parentNode.style.display = 'none';
+            } else {
+                card.parentNode.style.display = '';
+            }
+        });
+    }
+
+    search.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            searchAction();
+        }
+    });
+
+    searchBtn.addEventListener('click', searchAction);
 }
 
 toggleCheckbox();
