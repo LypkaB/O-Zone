@@ -1,18 +1,18 @@
 @font-face {
   font-family: 'GTEestiProText';
-  src: url("/assets/fonts/GT-Eesti-Pro-Text-Regular.OTF") format("opentype");
+  src: url("../fonts/GT-Eesti-Pro-Text-Regular.OTF") format("opentype");
   font-weight: 400;
 }
 
 @font-face {
   font-family: 'GTEestiProText';
-  src: url("/assets/fonts/GT-Eesti-Pro-Text-Medium.OTF") format("opentype");
+  src: url("../fonts/GT-Eesti-Pro-Text-Medium.OTF") format("opentype");
   font-weight: 500;
 }
 
 @font-face {
   font-family: 'GTEestiProText';
-  src: url("/assets/fonts/GT-Eesti-Pro-Text-Bold.OTF") format("opentype");
+  src: url("../fonts/GT-Eesti-Pro-Text-Bold.OTF") format("opentype");
   font-weight: 700;
 }
 
@@ -99,7 +99,7 @@ nav .logo {
   height: 28px;
   margin-left: 15px;
   margin-right: 15px;
-  background: url("/assets/images/logo.png") no-repeat 0;
+  background: url("../images/logo.png") no-repeat 0;
   background-size: contain;
 }
 
@@ -169,7 +169,7 @@ nav .catalog-button_burger {
   width: 24px;
   height: 24px;
   margin-right: 12px;
-  background-image: url("/assets/images/icons/burger-menu-icon.svg");
+  background-image: url("../images/icons/burger-menu-icon.svg");
 }
 
 nav .search {
@@ -247,7 +247,7 @@ nav .search-btn button::before {
   height: 24px;
   vertical-align: middle;
   color: white;
-  background-image: url("/assets/images/icons/search-icon.svg");
+  background-image: url("../images/icons/search-icon.svg");
 }
 
 #cart {
@@ -448,7 +448,7 @@ nav .search-btn button::before {
   position: absolute;
   top: -4px;
   left: 2px;
-  background-image: url("/assets/images/icons/check-icon.svg");
+  background-image: url("../images/icons/check-icon.svg");
 }
 
 .card {
@@ -593,7 +593,7 @@ nav .search-btn button::before {
   top: 25px;
   right: 25px;
   cursor: pointer;
-  background-image: url("/assets/images/icons/cross-icon.svg");
+  background-image: url("../images/icons/cross-icon.svg");
 }
 
 .cart-total {
@@ -607,4 +607,15 @@ nav .search-btn button::before {
 .cart-confirm {
   display: block;
   margin-left: auto;
+}
+
+.error-message {
+  width: 100%;
+  margin-top: 70px;
+  font-size: 24px;
+  text-align: center;
+}
+
+.sale {
+  color: red;
 }

@@ -1,35 +1,67 @@
 'use strict';
 
-let checkbox = document.querySelectorAll('.filter-check_checkbox');
-const btnCart = document.querySelector('#cart'),
-      modalCart = document.querySelector('.cart'),
-      closeModalCart = document.querySelector('.cart-close'),
-      cards = document.querySelectorAll('.goods .card'),
-      cartWrapper = document.querySelector('.cart-wrapper'),
-      cartEmpty = document.querySelector('#cart-empty'),
-      countGoods = document.querySelector('.counter');
+/*<----- Get data from DB  ----->*/
+function getData() {
+    const goodsWrapper = document.querySelector('.goods');
 
-/*<----- Checkbox ----->*/
-function toggleCheckbox() {
-    checkbox.forEach((item) => {
-        item.addEventListener('change', function() {
-            if (this.checked) {
-                this.nextElementSibling.classList.add('checked');
+    return fetch('./assets/db.json')
+        .then(response => {
+            if (response.ok) {
+                return response.json();
             } else {
-                this.nextElementSibling.classList.remove('checked');
+                throw new Error('No data received, error is ' + response.status);
             }
+        })
+        .then(data => {
+            return data;
+        })
+        .catch(err => {
+            console.warn(err);
+            goodsWrapper.innerHTML = '<div class="error-message">Oppps...something went wrong</div>';
         });
+}
+
+/*<----- Cards goods  ----->*/
+function renderCards(data) {
+    const goodsWrapper = document.querySelector('.goods');
+
+    data.goods.forEach(good => {
+        const card = document.createElement('div');
+
+        card.className = 'col-12 col-md-6 col-lg-4 col-xl-3';
+        card.innerHTML = `<div class="card">
+        
+                              ${good.sale ? '<div class="card-sale">🔥Hot Sale🔥</div>' : ''}
+                              
+                              <div class="card-img-wrapper">
+                                  <span class="card-img-top"
+                                        style="background-image: url('${good.img}')">
+                                  </span>
+                              </div>
+                              
+                              <div class="card-body justify-content-between">
+                                  <div class="card-price${good.sale ? ' sale' : ''}">${good.price} $</div>
+                                  <h5 class="card-title">${good.title}</h5>
+                                  <button class="btn btn-primary">Add cart</button>
+                              </div>
+                          </div>`;
+
+        goodsWrapper.appendChild(card);
     });
 }
 
 /*<----- Cart ----->*/
 function toggleCart() {
-    btnCart.addEventListener('click', () => {
+    const cartBtn = document.querySelector('#cart'),
+          modalCart = document.querySelector('.cart'),
+          closeCartModal = document.querySelector('.cart-close');
+
+    cartBtn.addEventListener('click', () => {
         modalCart.style.display = 'flex';
         document.body.style.overflow = 'hidden';
     });
 
-    closeModalCart.addEventListener('click', () => {
+    closeCartModal.addEventListener('click', () => {
         modalCart.style.display = 'none';
         document.body.style.overflow = '';
     });
@@ -37,7 +69,12 @@ function toggleCart() {
 
 /*<----- Add/delete goods in cart ----->*/
 function addRemoveCart() {
-    cards.forEach((card) => {
+    const cards = document.querySelectorAll('.goods .card'),
+          cartWrapper = document.querySelector('.cart-wrapper'),
+          cartEmpty = document.querySelector('#cart-empty'),
+          countGoods = document.querySelector('.counter');
+
+    cards.forEach(card => {
         const btn = card.querySelector('button');
 
         btn.addEventListener('click', () => {
@@ -64,7 +101,7 @@ function addRemoveCart() {
 
         countGoods.textContent = cardsCart.length;
 
-        cardsPrice.forEach((cardPrice) => {
+        cardsPrice.forEach(cardPrice => {
             let price = parseFloat(cardPrice.textContent);
 
             sum += price;
@@ -80,9 +117,23 @@ function addRemoveCart() {
     }
 }
 
+/*<----- Checkbox ----->*/
+function toggleCheckbox() {
+    const checkbox = document.querySelector('.filter-check_checkbox');
+
+    checkbox.addEventListener('change', function() {
+        if (this.checked) {
+            this.nextElementSibling.classList.add('checked');
+        } else {
+            this.nextElementSibling.classList.remove('checked');
+        }
+    });
+}
+
 /*<----- Search and filters  ----->*/
 function searchAndFilters() {
-    const search = document.querySelector('.search-wrapper_input'),
+    const cards = document.querySelectorAll('.goods .card'),
+          search = document.querySelector('.search-wrapper_input'),
           searchBtn = document.querySelector('.search-btn'),
           min = document.querySelector('#min'),
           max = document.querySelector('#max'),
@@ -92,7 +143,7 @@ function searchAndFilters() {
     function searchAction() {
         const searchText = new RegExp(search.value.trim(), 'i');
 
-        cards.forEach((card) => {
+        cards.forEach(card => {
             const title = card.querySelector('.card-title');
 
             if (!searchText.test(title.textContent)) {
@@ -103,17 +154,15 @@ function searchAndFilters() {
         });
     }
 
-    search.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            searchAction();
-        }
+    search.addEventListener('keypress', e => {
+        if (e.key === 'Enter') searchAction();
     });
 
     searchBtn.addEventListener('click', searchAction);
 
     /*<----- Price filter ----->*/
     function priceFilter() {
-        cards.forEach((card) => {
+        cards.forEach(card => {
             const cardPrice = card.querySelector('.card-price'),
                   price = parseFloat(cardPrice.textContent);
 
@@ -130,7 +179,7 @@ function searchAndFilters() {
 
     /*<----- Discount filter ----->*/
     discountCheckbox.addEventListener('click', () => {
-        cards.forEach((card) => {
+        cards.forEach(card => {
             if (discountCheckbox.checked) {
                 if (!card.querySelector('.card-sale')) {
                     card.parentNode.style.display = 'none';
@@ -142,7 +191,10 @@ function searchAndFilters() {
     });
 }
 
-toggleCheckbox();
-toggleCart();
-addRemoveCart();
-searchAndFilters();
+getData().then(data => {
+    renderCards(data);
+    toggleCart();
+    addRemoveCart();
+    toggleCheckbox();
+    searchAndFilters();
+});
