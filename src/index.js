@@ -29,7 +29,7 @@ function renderCards(data) {
         const card = document.createElement('div');
 
         card.className = 'col-12 col-md-6 col-lg-4 col-xl-3';
-        card.innerHTML = `<div class="card">
+        card.innerHTML = `<div class="card" data-category="${good.category}">
         
                               ${good.sale ? '<div class="card-sale">🔥Hot Sale🔥</div>' : ''}
                               
@@ -191,10 +191,47 @@ function searchAndFilters() {
     });
 }
 
+/*<----- Catalog  ----->*/
+function renderCatalog() {
+    const cards = document.querySelectorAll('.goods .card'),
+          categories = new Set(),
+          catalogList = document.querySelector('.catalog-list'),
+          catalogBtn = document.querySelector('.catalog-button'),
+          catalogWrapper = document.querySelector('.catalog');
+
+    cards.forEach(card => categories.add(card.dataset.category));
+
+    categories.forEach(item => {
+        const li = document.createElement('li');
+
+        li.textContent = item;
+        catalogList.appendChild(li);
+    });
+
+    catalogBtn.addEventListener('click', (e) => {
+        if (catalogWrapper.style.display) {
+            catalogWrapper.style.display = '';
+        } else {
+            catalogWrapper.style.display = 'block';
+        }
+
+        if (e.target.tagName === 'LI') {
+            cards.forEach(card => {
+                if (card.dataset.category === e.target.textContent) {
+                    card.parentNode.style.display = '';
+                } else {
+                    card.parentNode.style.display = 'none';
+                }
+            });
+        }
+    });
+}
+
 getData().then(data => {
     renderCards(data);
     toggleCart();
     addRemoveCart();
     toggleCheckbox();
     searchAndFilters();
+    renderCatalog();
 });
