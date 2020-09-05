@@ -207,7 +207,9 @@ function renderCatalog() {
         catalogList.appendChild(li);
     });
 
-    catalogBtn.addEventListener('click', (e) => {
+    const catalogItems = catalogList.querySelectorAll('li');
+
+    catalogBtn.addEventListener('click', e => {
         if (catalogWrapper.style.display) {
             catalogWrapper.style.display = '';
         } else {
@@ -222,16 +224,27 @@ function renderCatalog() {
                     card.parentNode.style.display = 'none';
                 }
             });
+
+            catalogItems.forEach(item => {
+                if (item === e.target) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+
+
+            filters();
         }
     });
 }
 
 getData().then(data => {
     renderCards(data);
+    renderCatalog();
     toggleCart();
     addRemoveCart();
     toggleCheckbox();
     search();
     filters();
-    renderCatalog();
 });
